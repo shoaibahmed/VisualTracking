@@ -26,7 +26,7 @@ omega = [x  - relaxation, y - relaxation, w + (2 * relaxation), h + (2 * relaxat
 % Shape kernel
 phi = bwdist(binaryImage);
 phi = phi - bwdist(1 - binaryImage);
-phi = -phi; % As phi is positive inside the shape, and negative outside it
+%phi = -phi; % As phi is positive inside the shape, and negative outside it
 
 %phi(phi >= 0) = phi(phi >= 0) - 1; % For making the contour zero distance
 

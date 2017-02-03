@@ -1,4 +1,4 @@
-function [ probabilityMapForeground, probabilityMapBackground ] = calculatePixelwisePosteriors(im, foregroundMap, numberOfBins)
+function [ probabilityMapForeground, probabilityMapBackground ] = calculatePixelwisePosteriors(im, smoothHeaviside, numberOfBins)
 %generateForegroundProbabilityMap Generated probability map
 %   The function generates a probability map for each pixel in the input
 %   image indicating whether it belongs to the foreground or background
@@ -18,7 +18,7 @@ for i = 1 : size(im, 1)
         blue = double(im(i, j, 3));
 
         % Check if current pixel lies in foreground or background
-        if foregroundMap(i, j)
+        if smoothHeaviside(i, j) > 0.5
             Mf = Mf + 1;
             % Foreground
             currentValue = histForeground(floor(red/numberOfBinsDiv) + 1, floor(green/numberOfBinsDiv) + 1, floor(blue/numberOfBinsDiv) + 1);
@@ -36,9 +36,15 @@ histForeground = histForeground ./ sum(histForeground(:));
 histBackground = histBackground  ./ sum(histBackground(:));
 
 % % Generate pixel probabilities
-imageArea = size(im, 1) * size(im, 2);
-Mb = (imageArea - Mf) / imageArea; % Probility of background
-Mf = Mf / imageArea;
+% imageArea = size(im, 1) * size(im, 2);
+% Mb = (imageArea - Mf) / imageArea; % Probility of background
+% Mf = Mf / imageArea;
+
+nF = sum(smoothHeaviside(:));
+nB = sum(1 - smoothHeaviside(:));
+n = nF + nB;
+Mf = nF / n;
+Mb = nB / n;
 
 probabilityMapForeground = zeros(size(im, 1), size(im, 2));
 probabilityMapBackground = zeros(size(im, 1), size(im, 2));
