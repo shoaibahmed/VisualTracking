@@ -5,7 +5,11 @@ disp(event.Key);
 % Quit button
 if strcmp(event.Key, 'q')
     global finished;
-    finished = true;
+    if ~finished
+        finished = true;
+    else
+        close all;
+    end
     
 % Register button
 elseif strcmp(event.Key, 'r')

@@ -1,4 +1,4 @@
-function [ phi, binaryImage, omega, p ] = init()
+function [ phi, p ] = init()
 %INIT Initialize the complete system
 % Constructs a shape kernels and returns the level-set formulation using euclidean distance transform
 % Also setups the parameters of affine warp
@@ -28,9 +28,14 @@ phi = bwdist(binaryImage);
 phi = phi - bwdist(1 - binaryImage);
 phi = -phi; % As phi is positive inside the shape, and negative outside it
 
-% Affine warp params (p)
-p = [1 0 0; 
-     0 1 0; 
-     -omega(1) -omega(2) 1];
+%phi(phi >= 0) = phi(phi >= 0) - 1; % For making the contour zero distance
 
+% Affine warp params (p)
+% p = [1 0 0; 
+%      0 1 0; 
+%      -omega(1) -omega(2) 1];
+
+% If registration is correct, W(x, p) = x where W takes a pixel location in object frame and warps it into the image frame
+p = affine2d(); % Creates identity transform
+ 
 end
